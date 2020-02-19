@@ -79,7 +79,7 @@ class Hand:
         return self.MATRIX[row][col]
 
 class Player:
-    VERSION = 'Bot: score (full matrix)'
+    VERSION = 'Bot: score (better amount)'
     PLAYER_NAME = 'Player One'
 
     def __init__(self, game_state):
@@ -104,7 +104,9 @@ class Player:
 
         score = hand.get_hand_score()
 
-        if score < 5:
+        if score < 3:
+            amount += self.game_state['minimum_raise'] * 2
+        elif score < 5:
             amount += self.game_state['minimum_raise']
         elif hand.get_hand_score() > 8:
             amount = 0
