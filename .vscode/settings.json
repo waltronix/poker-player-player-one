@@ -1,0 +1,4 @@
+{
+    "python.formatting.provider": "black",
+    "python.pythonPath": "C:\\python\\venvs\\leanpoker\\Scripts\\python.exe"
+}
