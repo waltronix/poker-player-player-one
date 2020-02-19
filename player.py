@@ -147,6 +147,7 @@ class Player:
         sys.stderr.writelines(str(message) + '\n')
 
     def betRequest(self):
+        global bluff
         amount = 0
         try:
             player = self.get_our_player()
