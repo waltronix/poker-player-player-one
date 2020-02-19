@@ -133,10 +133,8 @@ class Hand:
                 return True
         return False
 
-bluff = False
-
 class Player:
-    VERSION = 'Bot: Bluffing'
+    VERSION = 'Bot: No-Bluff'
     PLAYER_NAME = 'Player One'
 
     def __init__(self, game_state):
@@ -147,7 +145,6 @@ class Player:
         sys.stderr.writelines(str(message) + '\n')
 
     def betRequest(self):
-        global bluff
         amount = 0
         try:
             player = self.get_our_player()
@@ -163,15 +160,9 @@ class Player:
             if self.game_state['community_cards']:
                 card_score = hand.get_full_score()
                 score = min(score, card_score)
-            else:
-                if score >= 7 and random.randrange(100) <= 5:
-                    bluff = True
 
             round = self.game_state['round']
             round_sq = (round * round) + 1
-
-            if bluff:
-                score = 1
 
             if score == 1:
                 amount += self.game_state['minimum_raise'] * round_sq * 2
@@ -208,7 +199,6 @@ class Player:
     def showdown(self):
         self.log('showdown')
         self.log(self.game_state)
-        bluff = False
 
     def get_our_player(self):
         ''' Find our player '''
