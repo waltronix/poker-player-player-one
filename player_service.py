@@ -11,7 +11,7 @@ PORT_NUMBER = int(os.environ.get("PORT", 0)) or 9000
 
 @route('/', method='POST')
 def handler():
-    action = request.forms.get('action'))
+    action = request.forms.get('action')
     if action == 'check':
         return 'check'
     elif action == 'version':
