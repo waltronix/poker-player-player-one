@@ -4,6 +4,7 @@ import cgi
 import http.server
 import urllib.parse
 import os
+import sys
 from player import Player
 
 
@@ -13,6 +14,8 @@ PORT_NUMBER = int(os.environ.get("PORT", 0)) or 9000
 
 class PlayerService(http.server.BaseHTTPRequestHandler):
     def do_POST(self):
+
+        sys.stderr.writelines("player one - do_POST")
 
         self.send_response(200)
         self.send_header("Content-type", "application/json")
