@@ -72,12 +72,14 @@ class Hand:
         return self.MATRIX[row][col]
 
     def get_full_score(self):
-        if self.has_one_pair():
-            return 8
+        if self.has_flush():
+            return 2
+        elif self.has_straight():
+            return 3
         elif self.has_three_of_a_kind():
-            return 6
-        elif self.has_flush():
             return 4
+        elif self.has_one_pair():
+            return 8
         else:
             return 9
 
@@ -101,8 +103,12 @@ class Hand:
 
     def has_straight(self):
         ranks = [Card.RANK_INDEX[rank] for rank, count in self.__get_ranks().iteritems() if count > 0]
-        ranks.sort()
-
+        for i in range(13):
+            for j in range(5):
+                ok = (i + j) % 13 in ranks
+            if ok:
+                return True
+        return False
 
     def has_flush(self):
         counters = dict()
@@ -113,7 +119,7 @@ class Hand:
         return False
 
 class Player:
-    VERSION = 'Bot: Fold-Check'
+    VERSION = 'Bot: Straight Check'
     PLAYER_NAME = 'Player One'
 
     def __init__(self, game_state):
