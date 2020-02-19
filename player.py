@@ -2,8 +2,36 @@ import sys
 import random
 
 
+class Card:
+    def __init__(self, rank, suit=None):
+        if isinstance(rank, dict):
+            self.rank = rank['rank']
+            self.suit = rank['suit']
+        else:
+            self.rank = rank
+            self.suit = suit
+
+    def equal_rank(self, other):
+        return self.rank == self.other.rank
+
+
+class Hand:
+    def __init__(self):
+        self.cards = []
+
+    def add_card(self, card):
+        self.cards.append(card)
+
+    def has_two_pair(self):
+        for card in self.cards:
+            for other in self.cards:
+                if card != other and card.equal_rank(other):
+                    return True
+        return False
+
+
 class Player:
-    VERSION = "Bot: Always Raise"
+    VERSION = "Bot: Always Raise (Two Pair Check)"
     PLAYER_NAME = 'Player One'
 
     def __init__(self, game_state):
@@ -14,10 +42,13 @@ class Player:
         sys.stderr.writelines(message)
 
     def betRequest(self):
-        self.log(self.game_state)
-        self.log(self.get_our_player())
-
         player = self.get_our_player()
+        hand = Hand()
+        for card in player['hole_cards']:
+            hand.add_card(Card(card))
+
+        self.log('has_two_pairs: %s' % (hand.has_two_pair()))
+
         amount = self.game_state['current_buy_in'] - player['bet'] + self.game_state['minimum_raise']
         return amount
 
