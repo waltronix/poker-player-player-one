@@ -106,6 +106,9 @@ class Hand:
                 return True
         return False
 
+    def has_straight(self):
+        return False
+
     def has_flush(self):
         counters = dict()
         for card in self.cards:
@@ -137,7 +140,7 @@ class Player:
             amount = self.game_state['current_buy_in'] - player['bet']
             score = hand.get_hand_score()
 
-            if self.game_state.community_cards:
+            if self.game_state['community_cards']:
                 card_score = hand.get_full_score()
                 score = min(score, card_score)
 
