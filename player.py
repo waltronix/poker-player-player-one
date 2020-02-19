@@ -1,4 +1,5 @@
 import sys
+
 class Player:
     VERSION = "bet 5"
 
