@@ -80,8 +80,10 @@ class Hand:
             return 3
         elif self.has_three_of_a_kind():
             return 4
+        elif self.has_two_pair():
+            return 5
         elif self.has_one_pair():
-            return 8
+            return 6
         else:
             return 9
 
@@ -96,6 +98,13 @@ class Hand:
             if amount >= 2:
                 return True
         return False
+
+    def has_two_pair(self):
+        count = 0
+        for rank, amount in self.__get_ranks().iteritems():
+            if amount >= 2:
+                count = count + 1
+        return count >= 2
 
     def has_three_of_a_kind(self):
         for rank, amount in self.__get_ranks().iteritems():
@@ -121,7 +130,7 @@ class Hand:
         return False
 
 class Player:
-    VERSION = 'Bot: Flush&Straights'
+    VERSION = 'Bot: Flush&Straights&Two Pairs'
     PLAYER_NAME = 'Player One'
 
     def __init__(self, game_state):
