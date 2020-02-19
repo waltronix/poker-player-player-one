@@ -145,12 +145,12 @@ class Player:
         """
 
         if score == 1:
-            amount = player['stack'] # all in ....
+            amount += self.game_state['minimum_raise'] * 10
         elif score < 3:
             amount += self.game_state['minimum_raise'] * 2
         elif score < 5:
             amount += self.game_state['minimum_raise']
-        elif hand.get_hand_score() > 8:
+        elif score > 8:
             amount = 0
 
         return amount
