@@ -1,16 +1,16 @@
 import time
 import cgi
 import json
-import BaseHTTPServer
+import http.server
 import os
 from player import Player
 
 
 HOST_NAME = '0.0.0.0'
-PORT_NUMBER = os.environ.has_key('PORT') and int(os.environ['PORT']) or 9000
+PORT_NUMBER = int(os.environ.get('PORT', 0)) or 9000
 
 
-class PlayerService(BaseHTTPServer.BaseHTTPRequestHandler):
+class PlayerService(http.server.BaseHTTPRequestHandler):
 
     def do_POST(self):
 
@@ -46,7 +46,7 @@ class PlayerService(BaseHTTPServer.BaseHTTPRequestHandler):
         self.wfile.write(response)
 
 if __name__ == '__main__':
-    server_class = BaseHTTPServer.HTTPServer
+    server_class = http.server.HTTPServer
     httpd = server_class((HOST_NAME, PORT_NUMBER), PlayerService)
     print(time.asctime(), "Server Starts - %s:%s" % (HOST_NAME, PORT_NUMBER))
     try:
