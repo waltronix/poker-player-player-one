@@ -60,6 +60,10 @@ class Hand:
     def add_card(self, card):
         self.cards.append(card)
 
+    def get_first_score(self):
+        value = self.cards[0].get_rank_index() + self.cards[1].get_rank_index()
+        return 1 if value <= 2 else self.get_hand_score()
+
     def get_hand_score(self):
         index_0 = self.cards[0].get_rank_index()
         index_1 = self.cards[1].get_rank_index()
@@ -130,7 +134,7 @@ class Hand:
         return False
 
 class Player:
-    VERSION = 'Bot: Flush&Straights&Two Pairs'
+    VERSION = 'Bot: High Cards'
     PLAYER_NAME = 'Player One'
 
     def __init__(self, game_state):
@@ -156,6 +160,8 @@ class Player:
             if self.game_state['community_cards']:
                 card_score = hand.get_full_score()
                 score = min(score, card_score)
+            else:
+                score = self.get_first_score()
 
             round = self.game_state['round']
             round_sq = (round * round) + 1
