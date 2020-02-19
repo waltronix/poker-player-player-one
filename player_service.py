@@ -1,7 +1,8 @@
 import time
-import cgi
 import json
+import cgi
 import http.server
+import urllib.parse
 import os
 from player import Player
 
@@ -41,7 +42,7 @@ class PlayerService(http.server.BaseHTTPRequestHandler):
         elif action == "version":
             response = Player.VERSION
 
-        self.wfile.write(response)
+        self.wfile.write(bytes(response, 'utf-8'))
 
 
 if __name__ == "__main__":
