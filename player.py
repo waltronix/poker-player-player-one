@@ -3,6 +3,22 @@ import random
 
 
 class Card:
+    RANK_INDEX = {
+        "A": 0,
+        "K": 1, 
+        "Q:  2,
+        "J": 3,
+        "10": 4,
+        "9": 5,
+        "8": 6,
+        "7": 7,
+        "6": 8,
+        "5": 9,
+        "4": 10,
+        "3": 11,
+        "2": 12,
+    }
+
     def __init__(self, rank, suit=None):
         if isinstance(rank, dict):
             self.rank = rank['rank']
@@ -10,12 +26,31 @@ class Card:
         else:
             self.rank = rank
             self.suit = suit
+        
+    def get_rank_index(self):
+        return self.RANK_INDEX[self.rank]
 
     def equal_rank(self, other):
         return self.rank == other.rank
 
 
 class Hand:
+    MATRIX = (
+        (1,1,2,2,3,5,5,5,5,5,5,5,5),
+        (2,1,2,3,4,6,7,7,7,7,7,7,7),
+        (3,4,1,3,4,5,7,9,9,9,9,9,9),
+        (4,5,5,1,3,4,6,8,9,9,9,9,9),
+        (6,6,6,5,2,4,5,7,9,9,9,9,9),
+        (8,8,8,7,7,3,4,5,8,9,9,9,9),
+        (9,9,9,9,9,9,9,9,9,9,9,9,9),
+        (9,9,9,9,9,9,9,9,9,9,9,9,9),
+        (9,9,9,9,9,9,9,9,9,9,9,9,9),
+        (9,9,9,9,9,9,9,9,9,9,9,9,9),
+        (9,9,9,9,9,9,9,9,9,9,9,9,9),
+        (9,9,9,9,9,9,9,9,9,9,9,9,9),
+        (9,9,9,9,9,9,9,9,9,9,9,9,9),
+    )
+
     def __init__(self):
         self.cards = []
 
@@ -29,9 +64,11 @@ class Hand:
                     return True
         return False
 
+    def get_hand_score(self):
+        return self.MATRIX[self.cards[0]][self.cards[1]]
 
 class Player:
-    VERSION = 'Bot: only raise on pair'
+    VERSION = 'Bot: score'
     PLAYER_NAME = 'Player One'
 
     def __init__(self, game_state):
@@ -54,8 +91,12 @@ class Player:
             - player['bet']
         )
 
-        if hand.has_two_pair():
+        score = hand.get_hand_score()
+
+        if score < 5:
             amount += self.game_state['minimum_raise']
+        elif hand.get_hand_score() > 8:
+            amount = 0
 
         return amount
 
