@@ -72,6 +72,8 @@ class Hand:
         return self.MATRIX[row][col]
 
     def get_full_score(self):
+        if self.has_straight() and self.has_flush():
+            return 1
         if self.has_flush():
             return 2
         elif self.has_straight():
@@ -119,7 +121,7 @@ class Hand:
         return False
 
 class Player:
-    VERSION = 'Bot: Straight Check'
+    VERSION = 'Bot: Flush&Straights'
     PLAYER_NAME = 'Player One'
 
     def __init__(self, game_state):
