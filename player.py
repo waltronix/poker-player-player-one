@@ -107,7 +107,7 @@ class Hand:
         return False
 
     def has_straight(self):
-        return False
+        ranks = [Card.RANK_INDEX[rank] for rank, count in self.__get_ranks() if count > 0]
 
     def has_flush(self):
         counters = dict()
@@ -151,9 +151,9 @@ class Player:
                 amount += self.game_state['minimum_raise'] * 10
             elif score < 3:
                 amount += self.game_state['minimum_raise'] * round_sq
-            elif score < 5:
+            elif score <= 5:
                 amount += self.game_state['minimum_raise']
-            elif score > 8:
+            else:
                 amount = 0
 
             return amount
