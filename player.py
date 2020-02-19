@@ -164,7 +164,7 @@ class Player:
                 card_score = hand.get_full_score()
                 score = min(score, card_score)
             else:
-                if score >= 7 and random.randrange(100) <= 2:
+                if score >= 7 and random.randrange(100) <= 5:
                     bluff = True
 
             round = self.game_state['round']
