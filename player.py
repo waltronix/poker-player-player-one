@@ -126,32 +126,35 @@ class Player:
         sys.stderr.writelines(str(message) + '\n')
 
     def betRequest(self):
-        player = self.get_our_player()
-        hand = Hand()
-        for card in player['hole_cards']:
-            hand.add_card(Card(card))
-        for card in self.game_state['community_cards']:
-            hand.add_card(Card(card))
+        try:
+            player = self.get_our_player()
+            hand = Hand()
+            for card in player['hole_cards']:
+                hand.add_card(Card(card))
+            for card in self.game_state['community_cards']:
+                hand.add_card(Card(card))
 
-        self.log('has_two_pairs: %s' % (hand.has_two_pair()))
+            amount = self.game_state['current_buy_in'] - player['bet']
+            score = hand.get_hand_score()
 
-        amount = self.game_state['current_buy_in'] - player['bet']
-        score = hand.get_hand_score()
+            """
+            if self.game_state.community_cards:
+                card_score = hand.get_full_score()
+                score = min(score, card_score)
+            """
 
-        if self.game_state.community_cards:
-            card_score = hand.get_full_score()
-            score = min(score, card_score)
+            if score == 1:
+                amount += self.game_state['minimum_raise'] * 10
+            elif score < 3:
+                amount += self.game_state['minimum_raise'] * 2
+            elif score < 5:
+                amount += self.game_state['minimum_raise']
+            elif score > 8:
+                amount = 0
 
-        if score == 1:
-            amount += self.game_state['minimum_raise'] * 10
-        elif score < 3:
-            amount += self.game_state['minimum_raise'] * 2
-        elif score < 5:
-            amount += self.game_state['minimum_raise']
-        elif score > 8:
-            amount = 0
-
-        return amount
+            return amount
+        except:
+            return 0
 
     def showdown(self):
         self.log('showdown')
