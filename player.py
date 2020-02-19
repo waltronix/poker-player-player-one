@@ -31,7 +31,7 @@ class Hand:
 
 
 class Player:
-    VERSION = 'Bot: Always Raise (Two Pair Check)'
+    VERSION = 'Bot: only raise on pair'
     PLAYER_NAME = 'Player One'
 
     def __init__(self, game_state):
@@ -39,7 +39,7 @@ class Player:
 
     def log(self, message):
         sys.stderr.writelines('**********************\n')
-        sys.stderr.writelines(message + '\n')
+        sys.stderr.writelines(str(message) + '\n')
 
     def betRequest(self):
         player = self.get_our_player()
@@ -52,8 +52,11 @@ class Player:
         amount = (
             self.game_state['current_buy_in']
             - player['bet']
-            + self.game_state['minimum_raise']
         )
+
+        if hand.has_two_pair():
+            amount += self.game_state['minimum_raise']
+
         return amount
 
     def showdown(self):
