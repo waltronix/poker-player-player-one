@@ -136,7 +136,7 @@ class Hand:
 bluff = False
 
 class Player:
-    VERSION = 'Bot: High Cards'
+    VERSION = 'Bot: Bluffing'
     PLAYER_NAME = 'Player One'
 
     def __init__(self, game_state):
@@ -163,11 +163,14 @@ class Player:
                 card_score = hand.get_full_score()
                 score = min(score, card_score)
             else:
-                #score = self.get_first_score()
-                pass
+                if score >= 7 and random.randrange(100) <= 5:
+                    bluff = True
 
             round = self.game_state['round']
             round_sq = (round * round) + 1
+
+            if bluff:
+                score = 1
 
             if score == 1:
                 amount += self.game_state['minimum_raise'] * round_sq * 2
