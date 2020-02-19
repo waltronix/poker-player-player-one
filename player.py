@@ -101,6 +101,8 @@ class Hand:
 
     def has_straight(self):
         ranks = [Card.RANK_INDEX[rank] for rank, count in self.__get_ranks().iteritems() if count > 0]
+        ranks.sort()
+
 
     def has_flush(self):
         counters = dict()
@@ -122,6 +124,7 @@ class Player:
         sys.stderr.writelines(str(message) + '\n')
 
     def betRequest(self):
+        amount = 0
         try:
             player = self.get_our_player()
             hand = Hand()
@@ -164,12 +167,13 @@ class Player:
                 amount = 0 # fold
 
             self.log('score: %d, factor: %f, available: %d, amount: %d' % (score, factor, available, amount))
-            return amount
         except:
             self.log('ERROR')
             import traceback
             traceback.print_exc(file=sys.stderr)
-            return 0
+            amount = self.game_state['current_buy_in'] - player['bet']
+        finally:
+            return amount
 
     def showdown(self):
         self.log('showdown')
