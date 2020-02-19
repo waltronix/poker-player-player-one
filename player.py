@@ -5,7 +5,7 @@ import random
 class Card:
     RANK_INDEX = {
         "A": 0,
-        "K": 1, 
+        "K": 1,
         "Q:  2,
         "J": 3,
         "10": 4,
@@ -26,12 +26,15 @@ class Card:
         else:
             self.rank = rank
             self.suit = suit
-        
+
     def get_rank_index(self):
         return self.RANK_INDEX[self.rank]
 
     def equal_rank(self, other):
         return self.rank == other.rank
+
+    def equal_suit(self, other):
+        return True
 
 
 class Hand:
@@ -65,10 +68,12 @@ class Hand:
         return False
 
     def get_hand_score(self):
-        return self.MATRIX[self.cards[0]][self.cards[1]]
+        index_0 = self.cards[0].get_rank_index()
+        index_1 = self.cards[1].get_rank_index()
+        return self.MATRIX[index_0][index_1]
 
 class Player:
-    VERSION = 'Bot: score'
+    VERSION = 'Bot: score bug fix'
     PLAYER_NAME = 'Player One'
 
     def __init__(self, game_state):
