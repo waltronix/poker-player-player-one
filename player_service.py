@@ -1,10 +1,7 @@
+import os
 import time
 import json
-import cgi
-import http.server
-import urllib.parse
-import os
-import sys
+from bottle import route, run, request
 from player import Player
 
 
@@ -12,53 +9,27 @@ HOST_NAME = "0.0.0.0"
 PORT_NUMBER = int(os.environ.get("PORT", 0)) or 9000
 
 
-class PlayerService(http.server.BaseHTTPRequestHandler):
-    def do_POST(self):
-
-        sys.stderr.writelines("player one - do_POST")
-
-        self.send_response(200)
-        self.send_header("Content-type", "application/json")
-        self.end_headers()
-
-        ctype, pdict = cgi.parse_header(self.headers.getheader("content-type"))
-        if ctype == "multipart/form-data":
-            postvars = cgi.parse_multipart(self.rfile, pdict)
-        elif ctype == "application/x-www-form-urlencoded":
-            length = int(self.headers.getheader("content-length"))
-            postvars = cgi.parse_qs(self.rfile.read(length), keep_blank_values=1)
-        else:
-            postvars = {}
-
-        action = postvars["action"][0]
-
-        sys.stderr.writelines("player one - do_POST - before game_state")
-
-        if "game_state" in postvars:
-            game_state = json.loads(postvars["game_state"][0])
-        else:
-            game_state = {}
-
-        sys.stderr.writelines("player one - do_POST - before response")
-
-        response = ""
-        if action == "bet_request":
-            response = Player().betRequest(game_state)
-        elif action == "showdown":
-            Player().showdown(game_state)
-        elif action == "version":
-            response = Player.VERSION
-
-        self.wfile.write(bytes(response, "utf-8"))
+@route('/', method='POST')
+def handler():
+    action = request.forms.get('action')
+    if action == 'check':
+        return 'check'
+    elif action == 'version':
+        return Player.VERSION
+    elif action == 'bet_request':
+        state = json.loads(request.forms.get('game_state', '{}'))
+        return Player().betRequest(state)
+    elif action == 'showdown':
+        state = json.loads(request.forms.get('game_state', '{}'))
+        return Player().showdown(state)
+    else:
+        return 'Fuck you!'
 
 
-if __name__ == "__main__":
-    server_class = http.server.HTTPServer
-    httpd = server_class((HOST_NAME, PORT_NUMBER), PlayerService)
+if __name__ == '__main__':
     print(time.asctime(), "Server Starts - %s:%s" % (HOST_NAME, PORT_NUMBER))
     try:
-        httpd.serve_forever()
+        run(host=HOST_NAME, port=PORT_NUMBER, debug=True)
     except KeyboardInterrupt:
         pass
-    httpd.server_close()
     print(time.asctime(), "Server Stops - %s:%s" % (HOST_NAME, PORT_NUMBER))
