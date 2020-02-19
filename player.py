@@ -60,13 +60,6 @@ class Hand:
     def add_card(self, card):
         self.cards.append(card)
 
-    def has_two_pair(self):
-        for card in self.cards:
-            for other in self.cards:
-                if card != other and card.equal_rank(other):
-                    return True
-        return False
-
     def get_hand_score(self):
         index_0 = self.cards[0].get_rank_index()
         index_1 = self.cards[1].get_rank_index()
@@ -95,19 +88,19 @@ class Hand:
         return ranks
 
     def has_one_pair(self):
-        for rank, amount in self.__get_ranks():
+        for rank, amount in self.__get_ranks().iteritems():
             if amount >= 2:
                 return True
         return False
 
     def has_three_of_a_kind(self):
-        for rank, amount in self.__get_ranks():
+        for rank, amount in self.__get_ranks().iteritems():
             if amount >= 3:
                 return True
         return False
 
     def has_straight(self):
-        ranks = [Card.RANK_INDEX[rank] for rank, count in self.__get_ranks() if count > 0]
+        ranks = [Card.RANK_INDEX[rank] for rank, count in self.__get_ranks().iteritems() if count > 0]
 
     def has_flush(self):
         counters = dict()
