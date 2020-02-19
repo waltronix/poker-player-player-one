@@ -78,8 +78,44 @@ class Hand:
             col = min(index_0, index_1)
         return self.MATRIX[row][col]
 
+    def get_full_score(self):
+        if self.has_one_pair():
+            return 8
+        elif self.has_three_of_a_kind():
+            return 6
+        elif self.has_flush():
+            return 4
+        else:
+            return 9
+
+    def __get_ranks(self):
+        ranks = dict()
+        for card in self.cards:
+            ranks[card.rank] = ranks.get(card.rank, 0) + 1
+        return ranks
+
+    def has_one_pair(self):
+        for rank, amount in self.__get_ranks():
+            if amount >= 2:
+                return True
+        return False
+
+    def has_three_of_a_kind(self):
+        for rank, amount in self.__get_ranks():
+            if amount >= 3:
+                return True
+        return False
+
+    def has_flush(self):
+        counters = dict()
+        for card in self.cards:
+            counters[card.suit] = counters.get(card.suit, 0) + 1
+            if counters[card.suit] >= 5:
+                return True
+        return False
+
 class Player:
-    VERSION = 'Bot: score (better amount)'
+    VERSION = 'Bot: Score 2'
     PLAYER_NAME = 'Player One'
 
     def __init__(self, game_state):
@@ -94,17 +130,21 @@ class Player:
         hand = Hand()
         for card in player['hole_cards']:
             hand.add_card(Card(card))
+        for card in self.game_state['community_cards']:
+            hand.add_card(Card(card))
 
         self.log('has_two_pairs: %s' % (hand.has_two_pair()))
 
-        amount = (
-            self.game_state['current_buy_in']
-            - player['bet']
-        )
-
+        amount = self.game_state['current_buy_in'] - player['bet']
         score = hand.get_hand_score()
 
-        if score < 3:
+        if self.game_state.community_cards:
+            card_score = hand.get_full_score()
+            score = min(score, card_score)
+
+        if score == 1:
+            amount = player['stack'] # all in ....
+        elif score < 3:
             amount += self.game_state['minimum_raise'] * 2
         elif score < 5:
             amount += self.game_state['minimum_raise']
