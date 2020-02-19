@@ -164,7 +164,7 @@ class Player:
 
             available = player['stack'] * factor
             if amount > available:
-                amount = 0 # fold
+                amount = self.game_state['current_buy_in'] - player['bet']
 
             self.log('score: %d, factor: %f, available: %d, amount: %d' % (score, factor, available, amount))
         except:
