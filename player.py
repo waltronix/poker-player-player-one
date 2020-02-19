@@ -3,10 +3,13 @@ import random
 
 
 class Card:
+    REDS = ('hearts', 'diamonds')
+    BLACKS = ('clubs', 'spades')
+
     RANK_INDEX = {
         "A": 0,
         "K": 1,
-        "Q:  2,
+        "Q": 2,
         "J": 3,
         "10": 4,
         "9": 5,
