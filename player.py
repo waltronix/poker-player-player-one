@@ -1,4 +1,4 @@
-
+import sys
 class Player:
     VERSION = "bet 5"
 
@@ -6,5 +6,4 @@ class Player:
         return 5
 
     def showdown(self, game_state):
-        pass
-
+        sys.stderr.write(game_state)
