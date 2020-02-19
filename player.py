@@ -2,7 +2,7 @@ import sys
 
 
 class Player:
-    VERSION = "more logging"
+    VERSION = "PlayerOne v1"
 
     def betRequest(self, game_state):
         sys.stderr.writelines("player one - bet request")

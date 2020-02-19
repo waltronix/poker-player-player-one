@@ -18,10 +18,11 @@ def handler():
         return Player.VERSION
     elif action == 'bet_request':
         state = json.loads(request.forms.get('game_state', '{}'))
-        return Player().betRequest(state)
+        return str(Player().betRequest(state))
     elif action == 'showdown':
         state = json.loads(request.forms.get('game_state', '{}'))
-        return Player().showdown(state)
+        Player().showdown(state)
+        return ''
     else:
         return 'Fuck you!'
 
