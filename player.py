@@ -111,7 +111,7 @@ class Hand:
         return False
 
 class Player:
-    VERSION = 'Bot: Score (with round)'
+    VERSION = 'Bot: do not loose to munch money'
     PLAYER_NAME = 'Player One'
 
     def __init__(self, game_state):
@@ -149,6 +149,18 @@ class Player:
             else:
                 amount = 0
 
+            if score <= 3:
+                factor = 1.0
+            elif score == 4:
+                factor = 0.5
+            elif score == 5:
+                factor = 0.3
+            else:
+                factor = 0.0
+
+            available = player['stack'] * factor
+            if amount > available:
+                amount = 0 # fold
             return amount
         except:
             self.log('ERROR')
