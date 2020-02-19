@@ -133,6 +133,8 @@ class Hand:
                 return True
         return False
 
+bluff = False
+
 class Player:
     VERSION = 'Bot: High Cards'
     PLAYER_NAME = 'Player One'
@@ -161,7 +163,8 @@ class Player:
                 card_score = hand.get_full_score()
                 score = min(score, card_score)
             else:
-                score = self.get_first_score()
+                #score = self.get_first_score()
+                pass
 
             round = self.game_state['round']
             round_sq = (round * round) + 1
@@ -201,6 +204,7 @@ class Player:
     def showdown(self):
         self.log('showdown')
         self.log(self.game_state)
+        bluff = False
 
     def get_our_player(self):
         ''' Find our player '''
