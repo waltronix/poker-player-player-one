@@ -1,7 +1,8 @@
 import time
-import cgi
 import json
+import cgi
 import http.server
+import urllib.parse
 import os
 from player import Player
 
@@ -18,16 +19,16 @@ class PlayerService(http.server.BaseHTTPRequestHandler):
         self.send_header("Content-type", "application/json")
         self.end_headers()
 
-        ctype, pdict = cgi.parse_header(self.headers.getheader('content-type'))
+        ctype, pdict = cgi.parse_header(self.headers.get('content-type', ''))
         if ctype == 'multipart/form-data':
             postvars = cgi.parse_multipart(self.rfile, pdict)
         elif ctype == 'application/x-www-form-urlencoded':
-            length = int(self.headers.getheader('content-length'))
-            postvars = cgi.parse_qs(self.rfile.read(length), keep_blank_values=1)
+            length = int(self.headers.get('content-length', ''))
+            postvars = urllib.parse.parse_qs(self.rfile.read(length), keep_blank_values=1)
         else:
             postvars = {}
 
-        action = postvars['action'][0]
+        action = postvars.get('action', ('',))[0]
 
         if 'game_state' in postvars:
             game_state = json.loads(postvars['game_state'][0])
@@ -43,7 +44,7 @@ class PlayerService(http.server.BaseHTTPRequestHandler):
         elif action == 'version':
             response = Player.VERSION
 
-        self.wfile.write(response)
+        self.wfile.write(bytes(response, 'utf-8'))
 
 if __name__ == '__main__':
     server_class = http.server.HTTPServer
