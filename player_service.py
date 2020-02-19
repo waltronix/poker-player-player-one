@@ -32,10 +32,14 @@ class PlayerService(http.server.BaseHTTPRequestHandler):
 
         action = postvars["action"][0]
 
+        sys.stderr.writelines("player one - do_POST - before game_state")
+
         if "game_state" in postvars:
             game_state = json.loads(postvars["game_state"][0])
         else:
             game_state = {}
+
+        sys.stderr.writelines("player one - do_POST - before response")
 
         response = ""
         if action == "bet_request":
@@ -45,7 +49,7 @@ class PlayerService(http.server.BaseHTTPRequestHandler):
         elif action == "version":
             response = Player.VERSION
 
-        self.wfile.write(bytes(response, 'utf-8'))
+        self.wfile.write(bytes(response, "utf-8"))
 
 
 if __name__ == "__main__":
