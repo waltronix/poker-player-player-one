@@ -36,9 +36,6 @@ class Card:
     def equal_rank(self, other):
         return self.rank == other.rank
 
-    def equal_suit(self, other):
-        return True
-
 
 class Hand:
     MATRIX = (
@@ -73,10 +70,16 @@ class Hand:
     def get_hand_score(self):
         index_0 = self.cards[0].get_rank_index()
         index_1 = self.cards[1].get_rank_index()
-        return self.MATRIX[index_0][index_1]
+        if self.cards[0].suit == self.cards[1].suit:
+            row = min(index_0, index_1)
+            col = max(index_0, index_1)
+        else:
+            row = max(index_0, index_1)
+            col = min(index_0, index_1)
+        return self.MATRIX[row][col]
 
 class Player:
-    VERSION = 'Bot: score bug fix'
+    VERSION = 'Bot: score (with colors)'
     PLAYER_NAME = 'Player One'
 
     def __init__(self, game_state):
