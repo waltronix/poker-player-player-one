@@ -12,7 +12,7 @@ class Card:
             self.suit = suit
 
     def equal_rank(self, other):
-        return self.rank == self.other.rank
+        return self.rank == other.rank
 
 
 class Hand:
@@ -31,15 +31,15 @@ class Hand:
 
 
 class Player:
-    VERSION = "Bot: Always Raise (Two Pair Check)"
+    VERSION = 'Bot: Always Raise (Two Pair Check)'
     PLAYER_NAME = 'Player One'
 
     def __init__(self, game_state):
         self.game_state = game_state
 
     def log(self, message):
-        sys.stderr.writelines('**********************')
-        sys.stderr.writelines(message)
+        sys.stderr.writelines('**********************\n')
+        sys.stderr.writelines(message + '\n')
 
     def betRequest(self):
         player = self.get_our_player()
@@ -49,7 +49,11 @@ class Player:
 
         self.log('has_two_pairs: %s' % (hand.has_two_pair()))
 
-        amount = self.game_state['current_buy_in'] - player['bet'] + self.game_state['minimum_raise']
+        amount = (
+            self.game_state['current_buy_in']
+            - player['bet']
+            + self.game_state['minimum_raise']
+        )
         return amount
 
     def showdown(self):
@@ -57,7 +61,7 @@ class Player:
         self.log(self.game_state)
 
     def get_our_player(self):
-        """ Find our player """
+        ''' Find our player '''
         for player in self.game_state['players']:
             if player['name'] == self.PLAYER_NAME:
                 return player
