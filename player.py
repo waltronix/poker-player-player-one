@@ -1,10 +1,10 @@
+import sys
 
 class Player:
-    VERSION = "Default Python folding player"
+    VERSION = "bet 5"
 
     def betRequest(self, game_state):
-        return 0
+        return 5
 
     def showdown(self, game_state):
-        pass
-
+        sys.stderr.write(game_state)
