@@ -115,7 +115,7 @@ class Hand:
         return False
 
 class Player:
-    VERSION = 'Bot: Score 2'
+    VERSION = 'Bot: Score (with round)'
     PLAYER_NAME = 'Player One'
 
     def __init__(self, game_state):
@@ -141,10 +141,13 @@ class Player:
                 card_score = hand.get_full_score()
                 score = min(score, card_score)
 
+            round = self.game_state['round']
+            round_sq = (round * round) + 1
+
             if score == 1:
                 amount += self.game_state['minimum_raise'] * 10
             elif score < 3:
-                amount += self.game_state['minimum_raise'] * 2
+                amount += self.game_state['minimum_raise'] * round_sq
             elif score < 5:
                 amount += self.game_state['minimum_raise']
             elif score > 8:
