@@ -111,7 +111,7 @@ class Hand:
         return False
 
 class Player:
-    VERSION = 'Bot: do not loose to munch money'
+    VERSION = 'Bot: Fold-Check'
     PLAYER_NAME = 'Player One'
 
     def __init__(self, game_state):
@@ -141,19 +141,20 @@ class Player:
             round_sq = (round * round) + 1
 
             if score == 1:
-                amount += self.game_state['minimum_raise'] * 10
+                amount += self.game_state['minimum_raise'] * round_sq * 2
             elif score < 3:
                 amount += self.game_state['minimum_raise'] * round_sq
-            elif score <= 5:
+            elif score <= 6:
                 amount += self.game_state['minimum_raise']
             else:
                 amount = 0
+            amount = min(amount, player['stack'])
 
             if score <= 3:
                 factor = 1.0
             elif score == 4:
                 factor = 0.5
-            elif score == 5:
+            elif score < 7:
                 factor = 0.3
             else:
                 factor = 0.0
@@ -161,6 +162,8 @@ class Player:
             available = player['stack'] * factor
             if amount > available:
                 amount = 0 # fold
+
+            self.log('score: %d, factor: %f, available: %d, amount: %d' % (score, factor, available, amount))
             return amount
         except:
             self.log('ERROR')
